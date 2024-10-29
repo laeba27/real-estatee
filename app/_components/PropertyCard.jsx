@@ -1,4 +1,5 @@
-import { MapPin, Bed, Bath, Home, Car, IndianRupee } from 'lucide-react';
+import { MapPin, Bed, Bath, Home, Car, IndianRupee, Info, Navigation } from 'lucide-react';
+import Link from 'next/link';
 
 const Badge = ({ children, color }) => (
   <span className={`px-2 py-1 rounded-full text-xs font-medium ${color}`}>
@@ -6,7 +7,7 @@ const Badge = ({ children, color }) => (
   </span>
 );
 
-const PropertyCard = ({ property, onLocationClick }) => {
+const PropertyCard = ({ property, onLocationClick, distance, onShowRoute, userLocation }) => {
   return (
     <div className="bg-card rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-border/50">
       <div className="relative">
@@ -23,6 +24,13 @@ const PropertyCard = ({ property, onLocationClick }) => {
             For Sale
           </Badge>
         </div>
+        {distance && (
+        <div className="absolute top-2 right-2">
+          <Badge color="bg-blue-500/90 text-white">
+            {distance} km away
+          </Badge>
+        </div>
+      )}
       </div>
       <div className="p-4">
         <div className="flex items-center gap-1 mb-2">
@@ -64,17 +72,42 @@ const PropertyCard = ({ property, onLocationClick }) => {
           </div>
         </div>
 
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onLocationClick(property);
-          }}
-          className="w-full flex items-center justify-center gap-2 bg-primary text-white px-4 py-2.5 rounded-md hover:bg-primary/90 transition-colors"
-        >
-          <MapPin size={16} />
-          View Location
-        </button>
+        <div className="grid grid-cols-3 gap-3">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onLocationClick(property);
+            }}
+            className="flex items-center justify-center gap-2 bg-primary text-white px-4 py-2.5 rounded-md hover:bg-primary/90 transition-colors"
+          >
+            <MapPin size={16} />
+            View Location
+          </button>
+
+          {userLocation && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onShowRoute(userLocation, property.location);
+              }}
+              className="flex items-center justify-center gap-2 bg-blue-500 text-white px-4 py-2.5 rounded-md hover:bg-blue-600 transition-colors"
+            >
+              <Navigation size={16} />
+              Show Route
+            </button>
+          )}
+
+          <Link 
+            href={`/properties/${property.id}`}
+            className="flex items-center justify-center gap-2 bg-secondary text-primary px-4 py-2.5 rounded-md hover:bg-secondary/90 transition-colors"
+          >
+            <Info size={16} />
+            View Details
+          </Link>
+        </div>
       </div>
+
+     
     </div>
   );
 };

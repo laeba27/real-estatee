@@ -113,24 +113,23 @@ const properties = [
 export default function ForSalePage() {
   const [selectedProperty, setSelectedProperty] = useState(null);
 
+  const handleLocationSelect = (location) => {
+    console.log('Selected location:', location);
+    // You can use this location data when adding new properties
+    // location.lat and location.lng will give you the coordinates
+  };
+
   return (
     <div className="flex h-[calc(100vh-64px)]">
       <PropertyList 
         properties={properties}
         onPropertySelect={(property) => setSelectedProperty(property)} 
       />
-      <Suspense fallback={
-        <div className="w-1/2 h-full bg-muted flex items-center justify-center">
-          <div className="animate-pulse text-muted-foreground">
-            Loading Map...
-          </div>
-        </div>
-      }>
-        <MapViewNoSSR 
-          properties={properties} 
-          selectedProperty={selectedProperty}
-        />
-      </Suspense>
+      <MapViewNoSSR 
+        properties={properties} 
+        selectedProperty={selectedProperty}
+        onLocationSelect={handleLocationSelect}
+      />
     </div>
   );
 } 

@@ -86,3 +86,64 @@
   max-width: 280px;
 }
 
+.leaflet-routing-container {
+  background-color: white;
+  padding: 1rem;
+  margin: 10px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  max-height: 400px;
+  overflow-y: auto;
+  width: 300px;
+}
+
+.leaflet-routing-alt {
+  max-height: none !important;
+}
+
+.leaflet-routing-container h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.leaflet-routing-alt-minimized {
+  display: none;
+}
+
+.route-info {
+  background-color: white;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 10px;
+  z-index: 1000;
+}
+
+.route-info h3 {
+  color: #4b5563;
+  margin-bottom: 8px;
+}
+
+.route-info p {
+  color: #6b7280;
+  margin: 4px 0;
+}
+
+.leaflet-container {
+  z-index: 1;
+}
+
+.search-control {
+  z-index: 1000;
+  background: white;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search-results {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
