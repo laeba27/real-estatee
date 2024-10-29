@@ -1,13 +1,22 @@
 'use client';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import PropertyList from '@/app/_components/PropertyList';
-import MapView from '@/app/_components/MapView';
 import dynamic from 'next/dynamic';
 
-// Dynamically import MapView with no SSR to avoid leaflet issues
-const MapViewNoSSR = dynamic(() => import('@/app/_components/MapView'), {
-  ssr: false
-});
+// Dynamically import MapView with no SSR and proper loading state
+const MapViewNoSSR = dynamic(
+  () => import('@/app/_components/MapView'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="w-1/2 h-full bg-muted flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">
+          Loading Map...
+        </div>
+      </div>
+    )
+  }
+);
 
 const properties = [
     {
@@ -110,10 +119,18 @@ export default function ForSalePage() {
         properties={properties}
         onPropertySelect={(property) => setSelectedProperty(property)} 
       />
-      <MapViewNoSSR 
-        properties={properties} 
-        selectedProperty={selectedProperty}
-      />
+      <Suspense fallback={
+        <div className="w-1/2 h-full bg-muted flex items-center justify-center">
+          <div className="animate-pulse text-muted-foreground">
+            Loading Map...
+          </div>
+        </div>
+      }>
+        <MapViewNoSSR 
+          properties={properties} 
+          selectedProperty={selectedProperty}
+        />
+      </Suspense>
     </div>
   );
 } 

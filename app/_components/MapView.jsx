@@ -1,8 +1,12 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+
+// Only import Leaflet CSS if we're on the client side
+if (typeof window !== 'undefined') {
+  require('leaflet/dist/leaflet.css');
+}
 
 // Fix for default marker icons in Leaflet
 const icon = L.icon({
