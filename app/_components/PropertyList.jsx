@@ -44,7 +44,7 @@ const PropertyList = ({ properties, onPropertySelect }) => {
           />
         </div>
         
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <div className="relative">
             <Bed className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
             <select 

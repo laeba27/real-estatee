@@ -36,9 +36,9 @@ const Header = () => {
               <nav aria-label="Global">
                 <ul className="flex items-center gap-6 text-sm cursor-pointer">
                   <Link href={"/about"}><li className="hover:text-primary font-medium ">About</li></Link>
-                  <li className="hover:text-primary font-medium ">For sale</li>
-                  <li className="hover:text-primary font-medium ">Rent</li>
-                  <li className="hover:text-primary font-medium ">Agent Finder</li>
+                  <Link href={"/for-sale"}><li className="hover:text-primary font-medium ">For sale</li></Link>
+                  <Link href={"/rent"}><li className="hover:text-primary font-medium ">Rent</li></Link>
+                  <Link href={"/agent-finder"}><li className="hover:text-primary font-medium ">Agent Finder</li></Link>
                   
                 </ul>
               </nav>
