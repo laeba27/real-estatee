@@ -1,7 +1,16 @@
 'use client';
 import { useState } from 'react';
 import PropertyCard from './PropertyCard';
-import { Search, Bed, Bath, Home, Car, Navigation } from 'lucide-react';
+import { Search, Bed, Bath, Home, Car, Navigation, X, IndianRupee} from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 
 // Dummy properties data
 
@@ -16,6 +25,7 @@ const PropertyList = ({ properties, onPropertySelect }) => {
     baths: '',
     homeType: '',
     parking: '',
+    priceRange: '',
     nearbyRadius: '',
   });
 
@@ -24,7 +34,7 @@ const PropertyList = ({ properties, onPropertySelect }) => {
 
   // Function to calculate distance between two coordinates in kilometers
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // Earth's radius in km
+    const R = 6371; // Earth's radius in kilometers
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
     const a = 
@@ -32,7 +42,7 @@ const PropertyList = ({ properties, onPropertySelect }) => {
       Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
       Math.sin(dLon/2) * Math.sin(dLon/2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c;
+    return R * c; // Distance in kilometers
   };
 
   // Function to get user's location
@@ -59,9 +69,20 @@ const PropertyList = ({ properties, onPropertySelect }) => {
     }
   };
 
-  // Filter properties based on all filters including nearby
+  // Helper function to check if price is within range
+  const isPriceInRange = (price, range) => {
+    if (!range) return true;
+    const [min, max] = range.split('-').map(Number);
+    if (max) {
+      return price >= min && price <= max;
+    }
+    return price >= min; // For "above X" ranges
+  };
+
+  // Filter properties based on all filters including radius
   const filteredProperties = properties.filter(property => {
-    const matchesBasicFilters = (
+    // Basic filters
+    const basicFilters = (
       (!filters.search || 
         property.address.toLowerCase().includes(filters.search.toLowerCase())) &&
       (!filters.beds || property.beds >= parseInt(filters.beds)) &&
@@ -70,7 +91,20 @@ const PropertyList = ({ properties, onPropertySelect }) => {
       (!filters.parking || property.parking >= parseInt(filters.parking))
     );
 
-    // Check nearby filter if user location is available
+    // Price filter
+    let priceFilter = true;
+    if (filters.priceRange) {
+      if (filters.priceRange.includes('-')) {
+        const [min, max] = filters.priceRange.split('-').map(Number);
+        priceFilter = property.price >= min && property.price <= max;
+      } else if (filters.priceRange.includes('+')) {
+        const min = parseInt(filters.priceRange);
+        priceFilter = property.price >= min;
+      }
+    }
+
+    // Radius filter
+    let radiusFilter = true;
     if (userLocation && filters.nearbyRadius) {
       const distance = calculateDistance(
         userLocation.lat,
@@ -78,10 +112,10 @@ const PropertyList = ({ properties, onPropertySelect }) => {
         property.location.lat,
         property.location.lng
       );
-      return matchesBasicFilters && distance <= parseInt(filters.nearbyRadius);
+      radiusFilter = distance <= parseInt(filters.nearbyRadius);
     }
 
-    return matchesBasicFilters;
+    return basicFilters && priceFilter && radiusFilter;
   });
 
   const handleShowRoute = (start, end) => {
@@ -90,6 +124,34 @@ const PropertyList = ({ properties, onPropertySelect }) => {
       location: end
     });
   };
+
+  const clearFilters = () => {
+    setFilters({
+      search: '',
+      beds: '',
+      baths: '',
+      homeType: '',
+      parking: '',
+      priceRange: '',
+      nearbyRadius: '',
+    });
+  };
+
+  // Determine if we're showing rental properties
+  const isRental = properties.some(property => property.isRental);
+
+  // Price range options based on property type
+  const priceRangeOptions = isRental ? [
+    { label: 'Under ₹15,000', value: '0-15000' },
+    { label: '₹15,000 - ₹25,000', value: '15000-25000' },
+    { label: '₹25,000 - ₹35,000', value: '25000-35000' },
+    { label: '35000+', value: '35000-999999999' }  // Using a high number for "Above" filter
+  ] : [
+    { label: 'Under ₹50L', value: '0-5000000' },
+    { label: '₹50L - ₹1Cr', value: '5000000-10000000' },
+    { label: '₹1Cr - ₹2Cr', value: '10000000-20000000' },
+    { label: 'Above ₹2Cr', value: '20000000-999999999' }
+  ];
 
   return (
     <div className="w-1/2 h-full overflow-y-auto bg-background p-4">
@@ -129,83 +191,111 @@ const PropertyList = ({ properties, onPropertySelect }) => {
           </select>
         </div>
         
-        <div className="grid grid-cols-4 gap-4">
-          <div className="relative">
-            <Bed className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-            <select 
-              className="w-full pl-10 p-3 border rounded-lg bg-background appearance-none"
-              onChange={(e) => setFilters({ ...filters, beds: e.target.value })}
-            >
-              <option value="">Bedrooms</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4+</option>
-            </select>
-          </div>
+        <div className="grid grid-cols-5 gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="w-full flex items-center gap-2 p-3 border rounded-lg bg-background">
+              <Bed className="text-muted-foreground" />
+              <span className="flex-1 text-sm text-left">{filters.beds || 'Beds'}</span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Bedrooms</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setFilters({ ...filters, beds: '2' })}>2</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilters({ ...filters, beds: '3' })}>3</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilters({ ...filters, beds: '4' })}>4+</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-          <div className="relative">
-            <Bath className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-            <select 
-              className="w-full pl-10 p-3 border rounded-lg bg-background appearance-none"
-              onChange={(e) => setFilters({ ...filters, baths: e.target.value })}
-            >
-              <option value="">Bathrooms</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3+</option>
-            </select>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="w-full flex items-center gap-2 p-3 border rounded-lg bg-background">
+              <Bath className="text-muted-foreground" />
+              <span className="flex-1 text-sm text-left">{filters.baths || 'Baths'}</span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Bathrooms</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setFilters({ ...filters, baths: '1' })}>1</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilters({ ...filters, baths: '2' })}>2</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilters({ ...filters, baths: '3' })}>3+</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-          <div className="relative">
-            <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-            <select 
-              className="w-full pl-10 p-3 border rounded-lg bg-background appearance-none"
-              onChange={(e) => setFilters({ ...filters, homeType: e.target.value })}
-            >
-              <option value="">Home Type</option>
-              <option value="House">House</option>
-              <option value="Apartment">Apartment</option>
-              <option value="Villa">Villa</option>
-            </select>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="w-full flex items-center gap-2 p-3 border rounded-lg bg-background">
+              <Home className="text-muted-foreground" />
+              <span className="flex-1 text-sm text-left">{filters.homeType || 'Type'}</span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Home Type</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setFilters({ ...filters, homeType: 'House' })}>House</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilters({ ...filters, homeType: 'Apartment' })}>Apartment</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilters({ ...filters, homeType: 'Villa' })}>Villa</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-          <div className="relative">
-            <Car className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-            <select 
-              className="w-full pl-10 p-3 border rounded-lg bg-background appearance-none"
-              onChange={(e) => setFilters({ ...filters, parking: e.target.value })}
-            >
-              <option value="">Parking Spaces</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3+</option>
-            </select>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="w-full flex items-center gap-2 p-3 border rounded-lg bg-background">
+              <Car className="text-muted-foreground" />
+              <span className="flex-1 text-sm text-left">{filters.parking || 'Parking'}</span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Parking Spaces</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setFilters({ ...filters, parking: '1' })}>1</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilters({ ...filters, parking: '2' })}>2</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilters({ ...filters, parking: '3' })}>3+</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger className="w-full flex items-center gap-2 p-3 border rounded-lg bg-background">
+              <IndianRupee className="text-muted-foreground" />
+              <span className="flex-1 text-sm text-left">
+                {filters.priceRange ? 
+                  priceRangeOptions.find(opt => opt.value === filters.priceRange)?.label || 'Price' 
+                  : 'Price'}
+              </span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>{isRental ? 'Monthly Rent' : 'Price Range'}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {priceRangeOptions.map((option) => (
+                <DropdownMenuItem 
+                  key={option.value}
+                  onClick={() => setFilters({ ...filters, priceRange: option.value })}
+                >
+                  {option.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
+
+        {Object.values(filters).some(Boolean) && (
+          <Button 
+            variant="outline" 
+            onClick={clearFilters}
+            className="mt-4 w-full flex items-center justify-center gap-2"
+          >
+            <X className="w-4 h-4" />
+            Clear Filters
+          </Button>
+        )}
       </div>
 
       {/* Property Cards */}
       <div className="space-y-4 mt-4">
-        {filteredProperties.map((property) => (
-          <div key={property.id}>
+        <div className="grid gap-4">
+          {filteredProperties.map((property) => (
             <PropertyCard 
-              property={property} 
-              onLocationClick={onPropertySelect}
-              onShowRoute={handleShowRoute}
+              key={property.id} 
+              property={property}
+              onPropertySelect={onPropertySelect}
               userLocation={userLocation}
-              distance={
-                userLocation
-                  ? calculateDistance(
-                      userLocation.lat,
-                      userLocation.lng,
-                      property.location.lat,
-                      property.location.lng
-                    ).toFixed(1)
-                  : null
-              }
             />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

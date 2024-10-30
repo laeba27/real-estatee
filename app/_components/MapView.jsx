@@ -168,7 +168,7 @@ function SearchControl() {
 
   return (
     <div className="absolute top-4 left-4 z-[1000] w-80">
-      <form onSubmit={handleSearch} className="relative">
+      {/* <form onSubmit={handleSearch} className="relative">
         <input
           type="text"
           value={searchQuery}
@@ -184,7 +184,7 @@ function SearchControl() {
         >
           {isLoading ? 'Searching...' : 'Search'}
         </button>
-      </form>
+      </form> */}
 
       {isLoading && (
         <div className="mt-2 p-2 text-center text-sm text-gray-500">
@@ -248,13 +248,13 @@ function DraggableMarker({ onLocationSelect }) {
   return (
     <>
       <div className="absolute top-4 right-4 z-[1000]">
-        <button
+        {/* <button
           onClick={enableMarkerPlacement}
           className="px-4 py-2 bg-primary text-white rounded-lg shadow-sm flex items-center gap-2 hover:bg-primary/90"
         >
           <MapPin className="w-4 h-4" />
           Mark Location
-        </button>
+        </button> */}
       </div>
 
       {position && (
@@ -279,7 +279,7 @@ function DraggableMarker({ onLocationSelect }) {
 
 const MapView = ({ properties, selectedProperty, onLocationSelect }) => {
   return (
-    <div className="w-1/2 h-full sticky top-0">
+    <div className="w-1/2 h-full sticky top-0 map-container">
       <MapContainer 
         center={[20.5937, 78.9629]} 
         zoom={5}
