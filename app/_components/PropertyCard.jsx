@@ -60,13 +60,28 @@ const PropertyCard = ({ property, onPropertySelect, userLocation }) => {
       </div>
 
       <div className="p-4">
-        <div className="flex items-center gap-1 mb-2">
-          <IndianRupee className="w-4 h-4" />
+        <div className="flex items-center justify-between gap-4 mb-2">
+        <div className='flex items-center gap-1 mb-2'>
+        <IndianRupee className="w-4 h-4" />
           <span className="text-xl font-bold">
             {property.isRental 
               ? `${property.price.toLocaleString()}/month`
               : property.price.toLocaleString()}
           </span>
+        </div>
+         <div>
+         {userLocation && (
+            <Button
+              onClick={handleShowRoute}
+              className="bg-green-600 hover:bg-green-700 text-white flex items-center justify-center gap-2 transition-colors"
+            >
+              <LocateFixed className="w-4 h-4" />
+              Get Directions
+            </Button>
+          )}
+         
+         </div>
+          
         </div>
 
         <div className="flex items-center gap-1 text-muted-foreground mb-3">
@@ -74,7 +89,7 @@ const PropertyCard = ({ property, onPropertySelect, userLocation }) => {
           <span className="text-sm">{property.address}</span>
         </div>
 
-        <div className="grid grid-cols-4 gap-2 mb-4">
+        <div className="grid grid-cols-2 gap-2 mb-4">
           <div className="flex items-center gap-1 text-muted-foreground">
             <Bed className="w-4 h-4" />
             <span className="text-sm">{property.beds} Bedrooms</span>
@@ -93,32 +108,21 @@ const PropertyCard = ({ property, onPropertySelect, userLocation }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-2">
-          <Button 
+        <div className="grid grid-cols-2 gap-2">
+        <Button 
             onClick={handleViewDetails}
-            className="col-span-1 bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 transition-colors"
+            className=" bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2  transition-colors"
           >
-            <Info className="w-4 h-4" />
+            <Info className="w-4 h-4 " />
             View Details
           </Button>
-          
           <Button
             onClick={handleViewOnMap}
             className="bg-green-600 hover:bg-green-700 text-white flex items-center justify-center gap-2 transition-colors"
           >
-            <Navigation className="w-4 h-4" />
+            <Navigation className="w-3 h-3" />
             View on Map
           </Button>
-
-          {userLocation && (
-            <Button
-              onClick={handleShowRoute}
-              className="bg-green-600 hover:bg-green-700 text-white flex items-center justify-center gap-2 transition-colors"
-            >
-              <LocateFixed className="w-4 h-4" />
-              Get Directions
-            </Button>
-          )}
         </div>
       </div>
     </div>

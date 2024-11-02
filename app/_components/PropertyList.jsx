@@ -154,10 +154,10 @@ const PropertyList = ({ properties, onPropertySelect }) => {
   ];
 
   return (
-    <div className="w-1/2 h-full overflow-y-auto bg-background p-4">
+    <div className="w-1/2 h-full overflow-y-auto bg-background ">
       {/* Search and Filters */}
-      <div className="bg-background sticky top-0 z-10 pb-4 space-y-4">
-        <div className="relative">
+      <div className="bg-background sticky top-0 z-10  p-4 space-y-4">
+        <div className="relative ">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
@@ -285,8 +285,8 @@ const PropertyList = ({ properties, onPropertySelect }) => {
       </div>
 
       {/* Property Cards */}
-      <div className="space-y-4 mt-4">
-        <div className="grid gap-4">
+      <div className="space-y-4 mt-4 p-4">
+        <div className="grid grid-cols-2 gap-4">
           {filteredProperties.map((property) => (
             <PropertyCard 
               key={property.id} 

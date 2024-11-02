@@ -4,20 +4,12 @@ import { MapPin, Bed, Bath, Home, Car, IndianRupee, ChevronLeft, ChevronRight } 
 import Image from 'next/image';
 import { Button } from "@/components/ui/button";
 import dynamic from 'next/dynamic';
+import { saleProperties, rentProperties } from '@/app/_data/properties';
 
 const MapViewNoSSR = dynamic(
   () => import('@/app/_components/PropertyMapView'),
   { ssr: false }
 );
-
-// Import both property lists
-const saleProperties = [
-  // ... your sale properties data
-];
-
-const rentProperties = [
-  // ... your rent properties data
-];
 
 export default function PropertyDetail({ params }) {
   // Combine both property lists and find the requested property
@@ -28,7 +20,14 @@ export default function PropertyDetail({ params }) {
   const [loading, setLoading] = useState(true);
 
   if (!property) {
-    return <div>Property not found</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-2">Property Not Found</h1>
+          <p className="text-muted-foreground">The property you're looking for doesn't exist.</p>
+        </div>
+      </div>
+    );
   }
 
   const nextImage = () => {
