@@ -33,19 +33,37 @@ const Header = () => {
 
             <div className="hidden md:block">
               <nav aria-label="Global">
-                <ul className="flex items-center gap-10 text-base cursor-pointer">
+              <ul className="flex items-center gap-10 text-base cursor-pointer">
                   <Link href={"/for-sale"}>
-                    <li className="hover:text-primary font-medium hover:underline-offset-4 hover:underline">
-                      For sale
+                    <li
+                      className={`font-medium ${
+                        path === "/for-sale"
+                          ? "text-primary underline underline-offset-4"
+                          : "hover:text-primary hover:underline hover:underline-offset-4"
+                      }`}
+                    >
+                      For Sale
                     </li>
                   </Link>
                   <Link href={"/rent"}>
-                    <li className="hover:text-primary hover:underline-offset-4 hover:underline font-medium">
+                    <li
+                      className={`font-medium ${
+                        path === "/rent"
+                          ? "text-primary underline underline-offset-4"
+                          : "hover:text-primary hover:underline hover:underline-offset-4"
+                      }`}
+                    >
                       Rent
                     </li>
                   </Link>
                   <Link href={"/agent-finder"}>
-                    <li className="hover:text-primary hover:underline-offset-4 hover:underline font-medium">
+                    <li
+                      className={`font-medium ${
+                        path === "/agent-finder"
+                          ? "text-primary underline underline-offset-4"
+                          : "hover:text-primary hover:underline hover:underline-offset-4"
+                      }`}
+                    >
                       Agent Finder
                     </li>
                   </Link>

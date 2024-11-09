@@ -286,7 +286,7 @@ const PropertyList = ({ properties, onPropertySelect }) => {
 
       {/* Property Cards */}
       <div className="space-y-4 mt-4 p-4">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
           {filteredProperties.map((property) => (
             <PropertyCard 
               key={property.id} 

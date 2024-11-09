@@ -118,7 +118,7 @@ export default function PropertyDetail({ params }) {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
-            <h1 className="text-3xl font-bold mb-4">{property.title}</h1>
+            <h1 className="text-3xl capitalize font-bold mb-4">{property.title}</h1>
             <div className="flex items-center gap-2 text-2xl mb-6">
               <IndianRupee className="w-6 h-6" />
               <span className="font-semibold">

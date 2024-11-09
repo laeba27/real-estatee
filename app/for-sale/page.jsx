@@ -75,16 +75,14 @@ export default function ForSalePage() {
 
   if (loading) {
     return (
-      <div className="flex h-[calc(100vh-64px)] items-center justify-center">
-        <div className="space-y-4">
-          <div className="animate-pulse flex space-x-4">
-            <div className="h-12 w-12 rounded-full bg-gray-200"></div>
-            <div className="space-y-2">
-              <div className="h-4 w-[250px] rounded bg-gray-200"></div>
-              <div className="h-4 w-[200px] rounded bg-gray-200"></div>
-            </div>
-          </div>
-        </div>
+      <div className="flex items-center justify-center h-screen">
+        <video
+          src="/loading.webm"
+          autoPlay
+          loop
+          muted
+          className="w-44 h-44"
+        />
       </div>
     );
   }
@@ -102,11 +100,14 @@ export default function ForSalePage() {
 
   return (
     <div className="flex h-[calc(100vh-64px)]">
-      <PropertyList 
+  
+    <PropertyList 
         properties={properties}
         onPropertySelect={setSelectedProperty}
         loading={loading}
       />
+  
+    
       <MapViewNoSSR 
         properties={properties} 
         selectedProperty={selectedProperty}

@@ -296,7 +296,7 @@ export default function ProfilePage() {
               </div>
               <Link href="/post-property">
                 <Button>
-                  <Plus/> Post New Property
+                   Post New Property
                 </Button>
               </Link>
             </div>

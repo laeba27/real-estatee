@@ -70,7 +70,17 @@ export default function RentPage() {
   }, []); // Empty dependency array means this runs once on mount
 
   if (loading) {
-    return <div>Loading...</div>; // Optional loading state
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <video
+          src="/loading.webm"
+          autoPlay
+          loop
+          muted
+          className="w-44 h-44"
+        />
+      </div>
+    ); // Optional loading state
   }
 
   return (

@@ -115,7 +115,7 @@ const PropertyCard = ({ property, onPropertySelect, userLocation }) => {
 
         <div className="flex items-center gap-1 text-muted-foreground mb-3">
           <MapPin className="w-4 h-4" />
-          <span className="text-sm">{property.address}</span>
+          <span className="text-sm capitalize">{property.address}</span>
         </div>
 
         <div className="grid grid-cols-2 gap-2 mb-4">
@@ -129,7 +129,7 @@ const PropertyCard = ({ property, onPropertySelect, userLocation }) => {
           </div>
           <div className="flex items-center gap-1 text-muted-foreground">
             <Home className="w-4 h-4" />
-            <span className="text-sm">{property.homeType}</span>
+            <span className="text-sm capitalize">{property.homeType}</span>
           </div>
           <div className="flex items-center gap-1 text-muted-foreground">
             <Car className="w-4 h-4" />
