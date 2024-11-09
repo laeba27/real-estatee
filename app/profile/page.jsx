@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, Building2, Phone, User, CheckCircle2, Mail, MapPin } from "lucide-react";
+import { Loader2, Building2, Phone, User, CheckCircle2, Mail, MapPin, Plus } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import UserProperties from '@/app/_components/UserProperties';
@@ -296,7 +296,7 @@ export default function ProfilePage() {
               </div>
               <Link href="/post-property">
                 <Button>
-                  Post New Property
+                  <Plus/> Post New Property
                 </Button>
               </Link>
             </div>
