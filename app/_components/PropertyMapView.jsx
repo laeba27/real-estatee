@@ -3,18 +3,15 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// Create custom marker icon
-const customIcon = new L.Icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
+// Fix Leaflet default marker icon issue
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: '/marker-icon-2x.png',
+  iconUrl: '/marker-icon.png',
+  shadowUrl: '/marker-shadow.png',
 });
 
-export default function PropertyMapView({ center, zoom, properties, selectedProperty }) {
+export default function PropertyMapView({ center, zoom = 15, properties = [] }) {
   return (
     <MapContainer
       center={[center.lat, center.lng]}
@@ -30,14 +27,12 @@ export default function PropertyMapView({ center, zoom, properties, selectedProp
         <Marker
           key={property.id}
           position={[property.location.lat, property.location.lng]}
-          icon={customIcon}
         >
           <Popup>
             <div className="p-2">
-              <h3 className="font-semibold">{property.address}</h3>
-              <p className="text-sm text-muted-foreground">
-                ₹{property.price.toLocaleString()}
-              </p>
+              <h3 className="font-semibold">{property.title || 'Property'}</h3>
+              <p className="text-sm">₹{property.price?.toLocaleString()}</p>
+              <p className="text-xs text-muted-foreground">{property.address}</p>
             </div>
           </Popup>
         </Marker>

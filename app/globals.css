@@ -147,3 +147,11 @@
   overflow-y: auto;
 }
 
+@import 'leaflet/dist/leaflet.css';
+
+/* Add this if you haven't already */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}
+

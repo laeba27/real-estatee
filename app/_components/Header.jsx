@@ -4,7 +4,7 @@ import { Plus, LogIn } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton, useUser } from "@clerk/nextjs";
-
+import { UserNav } from "@/components/UserNav";
 const Header = () => {
   const path = usePathname();
   const { isSignedIn, user } = useUser();
@@ -61,13 +61,15 @@ const Header = () => {
                       <Plus className="mr-2 h-4 w-4" /> Post your ad
                     </Button>
                   </Link>
-                  <UserButton afterSignOutUrl="/" />
+                  <UserNav />
                 </>
               ) : (
                 <>
+                <Link href="/">
                   <Button disabled>
                     <Plus className="mr-2 h-4 w-4" /> Post your ad
                   </Button>
+                  </Link>
                   <Link href="/sign-in">
                     <Button variant="outline">
                       <LogIn className="mr-2 h-4 w-4" /> Login
@@ -79,6 +81,9 @@ const Header = () => {
               <div className="block md:hidden">{/* Mobile menu button */}</div>
             </div>
           </div>
+          <div className="ml-auto flex items-center space-x-4">
+          
+        </div>
         </div>
       </header>
     </div>

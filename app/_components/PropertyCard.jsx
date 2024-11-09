@@ -2,7 +2,7 @@ import { MapPin, Bed, Bath, Home, Car, IndianRupee, Info, Navigation, LocateFixe
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
+import Image from 'next/image';
 const Badge = ({ children, color }) => (
   <span className={`px-2 py-1 rounded-full text-xs font-medium ${color}`}>
     {children}
@@ -46,17 +46,46 @@ const PropertyCard = ({ property, onPropertySelect, userLocation }) => {
 
   return (
     <div className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-white">
-      <div className="relative">
-        <img
-          src={property.image}
-          alt={property.address}
-          className="w-full h-48 object-cover"
-        />
+      {/* <div className="relative">
+      <Image
+            src={property.images[0]}
+            alt={property.title || 'Property Image'}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={false}
+            unoptimized // Add this for external images
+          />
         <div className="absolute top-2 right-2">
           <Badge color="bg-primary/70 text-white">
             {property.isRental ? 'For Rent' : 'For Sale'}
           </Badge>
         </div>
+      </div> */}
+      <div className="relative aspect-[16/9] w-full">
+        {property.images && property.images[0] ? (
+          <div>
+          <Image
+            src={property.images[0]}
+            alt={property.title || 'Property Image'}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={false}
+            unoptimized // Add this for external images
+          />
+          <div className="absolute top-2 right-2">
+          <Badge color="bg-primary/70 text-white">
+            {property.isRental ? 'For Rent' : 'For Sale'}
+          </Badge>
+        </div>
+          </div>
+          
+        ) : (
+          <div className="w-full h-full bg-muted flex items-center justify-center">
+            <span className="text-muted-foreground">No image available</span>
+          </div>
+        )}
       </div>
 
       <div className="p-4">
